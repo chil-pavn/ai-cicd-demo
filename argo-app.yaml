@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ai-cicd-demo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/chil-pavn/ai-cicd-demo.git
+    path: kubernetes/
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated: {}
