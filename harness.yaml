@@ -1,0 +1,39 @@
+name: AI CD Pipeline
+stages:
+  - stage:
+      name: Deploy
+      identifier: Deploy
+      type: Deployment
+      spec:
+        service:
+          name: ai-cicd-demo
+        infrastructure:
+          environmentRef: Prod
+          infrastructureDefinition:
+            type: KubernetesDirect
+            spec:
+              connectorRef: kind-cluster
+              namespace: default
+        execution:
+          steps:
+            - step:
+                type: Canary
+                name: Canary Deployment
+                spec:
+                  canarySteps:
+                    - step:
+                        type: Verify
+                        name: Dynatrace Analysis
+                        spec:
+                          duration: 5m
+                          type: Dynatrace
+                          spec:
+                          #TODO: Add Dynatrace Service ID
+                            dynatraceService: YOUR_DYNATRACE_SERVICE_ID
+                            metrics: [error_rate, response_time]
+                  postDeploymentSteps:
+                    - step:
+                        type: Rollback
+                        name: Rollback on Failure
+                        spec:
+                          enabled: true

@@ -21,4 +21,10 @@ jobs:
           testim-api-key: ${{ secrets.TESTIM_API_KEY }}
           testim-project-id: ${{ secrets.TESTIM_PROJECT_ID }}
           branch: main
-      
+      - name: Snyk Security Scan
+        uses: snyk/actions/node@master
+        with:
+          command: monitor
+          args: --org=your-org --project-name=ai-cicd-demo
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
